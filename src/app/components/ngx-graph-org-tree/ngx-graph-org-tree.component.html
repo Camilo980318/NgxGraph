@@ -1,0 +1,155 @@
+<ngx-graph class="chart-container handler" [update$]="update$" [view]="[1330, 640]" [links]="links" [nodes]="nodes"
+    [curve]="curve" [layout]="layout" [nodeWidth]="150" [nodeHeight]="100" [layoutSettings]="layoutSettings"
+    [enableZoom]="false">
+    <ng-template #defsTemplate>
+        <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+            <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+        </svg:marker>
+    </ng-template>
+
+    <ng-template #nodeTemplate let-node>
+
+        <!--==================================================-->
+        <!--                  CARD INICIAL                    -->
+        <!--==================================================-->
+
+        <!-- Se identifica el tipo de Card gracias al Label, usando el ngIF -->
+        <svg:g class="node" xmlns="http://www.w3.org/2000/xhtml" width="180" height="150"
+            *ngIf="node.label === 'Inicial'">
+
+            <!-- Modificamos el tamaño de la Card -->
+            <svg:foreignObject width="250" height="250">
+                <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml" [ngStyle]="getStyles(node)">
+                    <label class="name"><b> {{ node.data.title}}</b></label>
+                    <label>{{ node.data.data1 }}</label>
+                    <label>{{ node.data.data2 }}</label>
+                    <div class="text-center">
+                        <button class="btn btn-primary text-center" (click)="addNodeComparar()">Crear Ticket</button>
+                    </div>
+
+                </xhtml:div>
+            </svg:foreignObject>
+            <!-- Los comentarios anteriores aplican par el resto de Cards -->
+
+        </svg:g>
+
+        <!--==================================================-->
+        <!--                 CARD COMPARAR                    -->
+        <!--==================================================-->
+
+        <svg:g class="node" xmlns="http://www.w3.org/2000/xhtml" width="180" height="150"
+            *ngIf="node.label === 'Comparar'">
+            <svg:foreignObject width="250" height="250">
+                <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml" [ngStyle]="getStyles(node)">
+                    <label class="name"><b> {{ node.data.title}}</b></label>
+                    <div class="form-group">
+                        <label>{{ node.data.data1 }}</label>
+                        <!-- Recorremos el array de categorías que vienen de la API -->
+                        <select class="form-control" id="exampleFormControlSelect">
+                            <option *ngFor="let categoria of categorias">{{categoria.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>{{ node.data.data2 }}</label>
+                        <!-- Recorremos el array de usuarios que vienen de la API -->
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option *ngFor="let user of users">{{user.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-primary text-center"
+                            (click)="addNodeCondiciones()">{{node.data.button.title}}</button>
+                    </div>
+
+                </xhtml:div>
+            </svg:foreignObject>
+        </svg:g>
+
+        <!--==================================================-->
+        <!--                CARD CONDICIONES                  -->
+        <!--==================================================-->
+
+        <svg:g class="node" xmlns="http://www.w3.org/2000/xhtml" width="180" height="150"
+            *ngIf="node.label === 'Condiciones'">
+            <svg:foreignObject width="250" height="250">
+                <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml" [ngStyle]="getStyles(node)">
+                    <label class="name"><b> {{ node.data.title}}</b></label>
+
+
+                    <div class="form-group">
+                        <label>{{ node.data.data1 }}</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1"
+                            placeholder="Escribe Algo..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{ node.data.data2 }}</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput"
+                            placeholder="Escribe Algo..." />
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-primary text-center"
+                            (click)="addNodeFinal()">{{node.data.button.title}}</button>
+                    </div>
+
+                </xhtml:div>
+            </svg:foreignObject>
+        </svg:g>
+
+        <!--==================================================-->
+        <!--                  CARD FINAL                      -->
+        <!--==================================================-->
+
+        <svg:g class="node" xmlns="http://www.w3.org/2000/xhtml" width="180" height="150"
+            *ngIf="node.label === 'Final'">
+            <svg:foreignObject width="250" height="250">
+                <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml" [ngStyle]="getStyles(node)">
+                    <label class="name"><b> {{ node.data.title}}</b></label>
+                    <label>{{ node.data.data1 }}</label>
+                    <label>{{ node.data.data2 }}</label>
+                    <div class="text-center">
+                        <button class="btn btn-primary text-center"
+                            (click)="postTicket()">{{node.data.button.title}}</button>
+                    </div>
+                </xhtml:div>
+            </svg:foreignObject>
+        </svg:g>
+
+        <!--==================================================-->
+        <!--                  CARD ACTUALIZAR                 -->
+        <!--==================================================-->
+
+        <svg:g class="node" xmlns="http://www.w3.org/2000/xhtml" width="180" height="150"
+            *ngIf="node.label === 'Actualizar'">
+            <svg:foreignObject width="250" height="250">
+                <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml" [ngStyle]="getStyles(node)">
+                    <label class="name"><b> {{ node.data.title}}</b></label>
+                    <label>{{ node.data.data1 }}</label>
+                    <label>{{ node.data.data2 }}</label>
+                    <div class="text-center">
+                        <button class="btn btn-primary text-center"
+                            (click)="postTicket()">{{node.data.button.title}}</button>
+                    </div>
+
+                </xhtml:div>
+            </svg:foreignObject>
+        </svg:g>
+
+    </ng-template>
+
+
+    <!--==================================================-->
+    <!--                  LINKS(FLECHAS)                  -->
+    <!--==================================================-->
+
+    <ng-template #linkTemplate let-link>
+        <svg:g class="edge">
+            <svg:path class="line" stroke-width="3" marker-end="url(#arrow)"></svg:path>
+            <svg:text class="edge-label" text-anchor="middle">
+            </svg:text>
+        </svg:g>
+    </ng-template>
+</ngx-graph>
+
+<button class="btn btn-info" id="addNode" (click)="addNodeActualizar()"><b>Actualizar Ticket</b> </button>
